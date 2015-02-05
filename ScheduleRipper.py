@@ -126,12 +126,17 @@ class CalendarManager:
                                                 q=text,
                                                 timeMin=convert_date_time(start),
                                                 timeMax=convert_date_time(end)).execute()
+	    print events
             for event in events['items']:
+		print event
                 print '\t%s: %s (%s)' % (event['summary'], event['description'], event['start']['dateTime'])
                 title = event['summary']
                 content = event['description']
                 game_number = content[content.find('#') + 1:]
-                where = event['location']
+                if 'location' in event.keys():
+			where = event['location']
+		else:
+			where = ''
                 sep = title.find('@')
                 sep2 = title.rfind(' at ')
                 away = title[:sep].strip()
@@ -191,7 +196,7 @@ class CalendarManager:
         created_event = self.service.events().insert(calendarId=cal, body=event).execute()
 
         print 'Added event: %s' % (created_event['id'],)
-
+	print event
         return created_event
 
     def __update_game(self, existing_game, new_game, cal):
